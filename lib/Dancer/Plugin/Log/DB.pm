@@ -34,7 +34,7 @@ sub _setup_connection {
 	my %connection_params;
 	
 	for (qw/driver database username password host port/) {
-		$connection_params{$_} = $settings->{db}{$_} || $db_defaults{$_};
+		$connection_params{$_} = $settings->{database}{$_} || $db_defaults{$_};
 	}
 	
 	$dbh = database(\%connection_params);

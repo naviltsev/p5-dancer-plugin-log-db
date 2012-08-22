@@ -42,7 +42,7 @@ Database setup is going to be in application config file.
 
 plugins:
 	"Log::DB":
-		db:
+		database:
 			driver: 'mysql'
 			database: 'logs'
 			host: 'localhost'
