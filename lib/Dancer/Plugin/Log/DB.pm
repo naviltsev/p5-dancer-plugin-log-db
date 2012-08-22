@@ -15,8 +15,8 @@ use Dancer::Plugin::Database;
 
 our $VERSION = '0.01';
 
-my $settings = undef;
-my $dbh;
+our $settings = undef;
+our $dbh;
 
 my %db_defaults = (
 	driver => 'SQLite',
@@ -29,13 +29,12 @@ my %db_defaults = (
 
 sub _setup_connection {
 	$settings = plugin_setting() if !$settings;
-	
 	return unless $settings;
 	
 	my %connection_params;
 	
 	for (qw/driver database username password host port/) {
-		$connection_params{$_} = $settings->{database}{$_} || $db_defaults{$_};
+		$connection_params{$_} = $settings->{db}{$_} || $db_defaults{$_};
 	}
 	
 	$dbh = database(\%connection_params);

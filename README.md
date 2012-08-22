@@ -8,9 +8,9 @@ Log arbitrary messages into a database
 
 By default, requires db table with with following SQL declaration:
 
-- _id - INT;
-- timestamp - DATETIME;
-- message - TEXT or VARCHAR with length you need;
+- id (integer); *not actually required, you can set it to be key field with autoincrement
+- timestamp (datetime/timestamp); *not working now
+- message (text/varchar);
 
 You can expand functionality by adding any number of columns and write any data into those.
 For example, in addition to existing 'timestamp' and 'message' columns, 
@@ -25,12 +25,12 @@ use Dancer::Plugin::Log::DB;
 
 get '/index' => sub {
 	# 'timestamp' is optional - it will be added automatically  
-	log_db message => 'Some message to be logged into database';
+	log_db { message => 'Some message to be logged into database' };
 
 	# or, with additional fields
-	log_db message => 'Some message to log into database',
+	log_db { message => 'Some message to log into database',
 			server_id => 1,
-			field2 => 'field2_content'
+			field2 => 'field2_content' }
 };
 
 
@@ -64,7 +64,6 @@ In 'log' section you setup additional fields in log table, and optionally field 
 
 2) SQL TABLE NOTES
 There are some rules you have to follow while creating logs table.
-- it should contain '_id' field;
 - if you don't rename 'timestamp' and 'message' fields in YML, add 'message' field (any type you want), and 'timestamp' field.
 - it should contain all fields declared in "log" -> "additional_field_list" list
 
