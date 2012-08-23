@@ -53,7 +53,7 @@ plugins:
 		log:
 			timestamp_field: 'timestamp'
 			message_field: 'message'
-			additional_field_list: [ 'server_id', 'field1', 'field2' ]  # what is this for??????? probably for throwing exceptions if there are no such fields in db?
+			additional_fields: [ 'server_id', 'field1', 'field2' ]  # what is this for??????? probably for throwing exceptions if there are no such fields in db?
 																		# it currently works without this additional_field_list...
 
 

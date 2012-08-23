@@ -75,11 +75,11 @@ get '/03_add_common_log_entry/*/*' => sub {
 	}
 	
 	my $entry = {
-		message_field => $message
+		message => $message
 	};
 
 	if ($timestamp) {
-		$entry->{timestamp_field} = $timestamp;
+		$entry->{timestamp} = $timestamp;
 	}
 	
 	eval {

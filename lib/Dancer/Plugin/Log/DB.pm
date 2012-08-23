@@ -59,8 +59,10 @@ register log_db => sub {
 	my (@fields, @bind);
 
 	# Handle 'message' and 'timestamp' field values
-	my $message = $params->{$message_field_name} || return;
-	my $timestamp = $params->{$timestamp_field_name} || time;
+	# my $message = $params->{$message_field_name} || return;
+	# my $timestamp = $params->{$timestamp_field_name} || time;
+	my $message = $params->{message} || return;
+	my $timestamp = $params->{timestamp} || time;
 	
 	push @fields, $message_field_name;
 	push @fields, $timestamp_field_name;
@@ -68,8 +70,10 @@ register log_db => sub {
 	push @bind, $timestamp;
 	
 	# Handle additional field values
-	delete $params->{$message_field_name};
-	delete $params->{$timestamp_field_name};
+	# delete $params->{$message_field_name};
+	# delete $params->{$timestamp_field_name};
+	delete $params->{message};
+	delete $params->{timestamp};
 	
 	if (scalar %$params) {
 		while (my ($key, $value) = each %$params) {
