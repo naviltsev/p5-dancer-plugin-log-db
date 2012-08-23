@@ -14,6 +14,7 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => '0.94',
+		'Time::Piece' => '1.1501',
 		'Dancer::Plugin::Database' => '1.82',
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

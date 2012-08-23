@@ -4,10 +4,9 @@ use 5.006;
 use strict;
 use warnings;
 
-use Data::Dumper;
 use Carp;
-
 use List::Util 'first';
+use Time::Piece;
 
 use Dancer::Plugin;
 use Dancer::Config;
@@ -58,16 +57,13 @@ register log_db => sub {
 
 	my (@fields, @bind);
 
-	# Handle 'message' and 'timestamp' field values
-	# my $message = $params->{$message_field_name} || return;
-	# my $timestamp = $params->{$timestamp_field_name} || time;
 	my $message = $params->{message} || return;
-	my $timestamp = $params->{timestamp} || time;
+	my $timestamp = $params->{timestamp} ? localtime($params->{timestamp}) : localtime;
 	
 	push @fields, $message_field_name;
 	push @fields, $timestamp_field_name;
 	push @bind, $message;
-	push @bind, $timestamp;
+	push @bind, sprintf("%s %s", $timestamp->ymd, $timestamp->hms);
 	
 	# Handle additional field values
 	# delete $params->{$message_field_name};

@@ -2,6 +2,8 @@ package t::lib::TestApp;
 
 use Data::Dumper;
 
+use Time::Piece;
+
 use Dancer;
 use Dancer::Plugin::Log::DB;
 
@@ -20,19 +22,12 @@ get '/01_prepare_env_a/*/*' => sub {
 
 get '/02_add_common_log_entry/*/*' => sub {
 	my ($message, $timestamp) = splat;
-	
-	if ($timestamp eq 'undef') {
-		$timestamp = time();
-	}
 
 	my $entry = {
-		message => $message
+		message => $message,
+		timestamp => $timestamp eq 'undef' ? time : $timestamp
 	};
-	
-	if ($timestamp ne 'undef') {
-		$entry->{timestamp} = $timestamp;
-	}
-	
+		
 	eval {
 		log_db $entry;
 	};
@@ -46,6 +41,8 @@ get '/02_check_common_log_entry/*/*' => sub {
 	my ($message, $timestamp) = splat;
 	undef($timestamp) 
 		if ($timestamp eq 'undef');
+	# $timestamp = time 
+	# 	unless $timestamp eq 'undef';
 	
 	my $where = 'message = ?';
 	if ($timestamp) {
@@ -54,7 +51,7 @@ get '/02_check_common_log_entry/*/*' => sub {
 
 	my @bind = ($message);
 	if ($timestamp) {
-		push @bind, $timestamp;
+		push @bind, sprintf("%s %s", localtime($timestamp)->ymd, localtime($timestamp)->hms);
 	}
 	
 	my $sth = log_db_dbh->prepare("SELECT * FROM logs WHERE $where");
@@ -69,18 +66,11 @@ get '/02_check_common_log_entry/*/*' => sub {
 
 get '/03_add_common_log_entry/*/*' => sub {
 	my ($message, $timestamp) = splat;
-
-	if ($timestamp eq 'undef') {
-		$timestamp = time();
-	}
 	
 	my $entry = {
-		message => $message
+		message => $message,
+		timestamp => $timestamp eq 'undef' ? time : $timestamp
 	};
-
-	if ($timestamp) {
-		$entry->{timestamp} = $timestamp;
-	}
 	
 	eval {
 		log_db $entry;
@@ -103,7 +93,7 @@ get '/03_check_common_log_entry/*/*' => sub {
 	
 	my @bind = ($message);
 	if ($timestamp) {
-		push @bind, $timestamp;
+		push @bind, sprintf("%s %s", localtime($timestamp)->ymd, localtime($timestamp)->hms);
 	}
 	
 	my $sth = log_db_dbh->prepare("SELECT * FROM logs WHERE $where");
@@ -119,19 +109,12 @@ get '/03_check_common_log_entry/*/*' => sub {
 get '/04_add_common_log_entry/*/*/*/*' => sub {
 	my ($message, $timestamp, $field1, $field2) = splat;
 
-	if ($timestamp eq 'undef') {
-		$timestamp = time();
-	}
-
 	my $entry = {
 		message => $message,
+		timestamp => $timestamp eq 'undef' ? time : $timestamp,
 		field1 => $field1,
 		field2 => $field2
 	};
-
-	if ($timestamp) {
-		$entry->{timestamp} = $timestamp;
-	}
 
 	eval {
 		log_db $entry;
@@ -154,7 +137,7 @@ get '/04_check_common_log_entry/*/*/*/*' => sub {
 
 	my @bind = ($message, $field1, $field2);
 	if ($timestamp) {
-		push @bind, $timestamp;
+		push @bind, sprintf("%s %s", localtime($timestamp)->ymd, localtime($timestamp)->hms);
 	}
 
 	my $sth = log_db_dbh->prepare("SELECT * FROM logs WHERE $where");
@@ -170,18 +153,11 @@ get '/04_check_common_log_entry/*/*/*/*' => sub {
 get '/05_add_common_log_entry/*/*' => sub {
 	my ($message, $timestamp) = splat;
 
-	if ($timestamp eq 'undef') {
-		$timestamp = time();
-	}
-
 	my $entry = {
 		message => $message,
+		timestamp => $timestamp eq 'undef' ? time : $timestamp,
 		nonexisent_field => 'test',
 	};
-
-	if ($timestamp ne 'undef') {
-		$entry->{timestamp} = $timestamp;
-	}
 
 	eval {
 		log_db $entry;
