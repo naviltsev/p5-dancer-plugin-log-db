@@ -1,5 +1,10 @@
 package Dancer::Plugin::Log::DB;
 
+
+=head1 NAME
+Dancer::Plugin::Log::DB - log arbitrary messages into a database
+=cut
+
 use 5.006;
 use strict;
 use warnings;
@@ -23,7 +28,7 @@ my %db_defaults = (
 	username => 'myusername',
 	password => 'password',
 	host => 'localhost',
-	port => '3106',
+	port => '3306',
 );
 
 sub _setup_connection {
