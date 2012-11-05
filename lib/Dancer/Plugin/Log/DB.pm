@@ -53,7 +53,6 @@ register log_db => sub {
 	my $params = shift;
 
 	_setup_connection();
-	# die "Can't get database handle" unless $dbh;
 
 	my $message_field_name = $settings->{log}->{message_field_name} || 'message';
 	my $timestamp_field_name = $settings->{log}->{timestamp_field_name} || 'timestamp';
@@ -71,8 +70,6 @@ register log_db => sub {
 	push @bind, sprintf("%s %s", $timestamp->ymd, $timestamp->hms);
 	
 	# Handle additional field values
-	# delete $params->{$message_field_name};
-	# delete $params->{$timestamp_field_name};
 	delete $params->{message};
 	delete $params->{timestamp};
 	

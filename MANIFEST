@@ -4,6 +4,13 @@ Makefile.PL
 MANIFEST			This list of files
 README
 t/00-load.t
+t/01-env.t
+t/02-basic.t
+t/03-basic-renamed-default-fields.t
+t/04-additional-fields.t
+t/05-exceptions.t
+t/99-cleanup.t
+t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
