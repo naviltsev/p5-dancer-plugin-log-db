@@ -1,11 +1,5 @@
 package Dancer::Plugin::Log::DB;
 
-
-=head1 NAME
-Dancer::Plugin::Log::DB - log arbitrary messages into a database
-=cut
-
-use 5.006;
 use strict;
 use warnings;
 
@@ -89,10 +83,137 @@ register log_db => sub {
 	my $query = "INSERT INTO logs (" . join (",", @fields) . ") VALUES($placeholders)";
 
 	my $sth = $dbh->prepare($query);
-
 	$sth->execute(@bind);
 };
 
 register_plugin;
 
 1; # End of Dancer::Plugin::Log::DB
+
+__END__
+
+=head1 NAME
+
+Dancer::Plugin::Log::DB - log arbitrary messages into a database from within your Dancer application.
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 SYNOPSIS
+
+	use Dancer;
+	use Dancer::Plugin::Log::DB;
+
+	get '/' => sub {
+		# Simple usage - timestamp is NOW 
+		log_db { message => 'Simple log message' };
+
+		# Both message and timestamp are set
+		log_db { message => 'Message at certain time', timestamp => 9982481 };
+
+		# Using additional fields for complementary information
+		log_db { message => 'Another simple message', server_id => $my_server_id }; 
+	}
+
+Database connection details and plugin settings are read from application config file - see below on more details.
+
+=head1 DESCRIPTION
+
+Provides an easy way to add arbitrary logging messages into a database for your Dancer application.
+Supports more than one common field ('message') to add bits of information into.
+
+You can add as many fields as you wish in your database table and fill them in with I<log_db> calls.
+
+Default fields are I<message> and I<timestamp>, thus at its simplest case it requires database table with the following SQL declaration:
+
+=over 4
+
+=item * I<id> field.
+
+Or any name you want - the plugin doesn't care of this field at all. Autoincrementing for this field would be a good choice.
+
+=item * I<message> field.
+
+This is where message will be stored. TEXT/VARCHAR type.
+
+=item * I<timestamp> field.
+
+Where timestamp field will be kept. TIMESTAMP/TEXT/VARCHAR type.
+
+=back
+
+You can expand functionality by adding any number of columns and write any data supported by your database backend.
+
+For example, in complement to existing I<timestamp> and I<message> fields you can also add I<server_id> column to store server id which left the message.
+
+=head1 CONFIGURATION
+
+B<Table to keep logs should be called 'logs' in your database. This is not configurable in this version. I'm really sorry.>
+
+This plugin makes use of great I<Dancer::Plugin::Database> plugin, thus configuration is divided into 2 parts - database configuration and plugin configuration: 
+
+	plugins:
+		"Log::DB":
+			database:
+				driver: 'mysql'
+				database: 'test'
+				host: 'localhost'
+				port: 3306
+				username: 'logs_username'
+				password: 'logs_password'
+			log:
+				message_field_name: 'message'
+				timestamp_field_name: 'timestamp'
+				additional_fields:
+					- 'server_id'
+					- 'author_id'
+
+In the simplest case I<log> section can be empty.
+In this case message field name should be I<message>, timestamp field name should be I<timestamp>.
+
+If you want to rename I<message> and I<timestamp> to something more clear in your database logs table, make sure you set corresponding names in I<message_field_name> and I<timestamp_field_name> under the I<log> section.
+
+If you try to leave a log message in a field which is not listed within I<additional_fields>, you will get an exception.
+
+=head1 CAVEATS
+
+Table name in your database backend should be called 'logs' and it's not configurable at the moment.
+I'm terribly sorry for this inconvenience and I promise I will fix this in the 0.02 version.
+
+=head1 BUGS
+
+This is the 0.01 version and there are bugs. Your feedbacks are greatly welcome.
+
+=head1 TODO
+
+Add configuration parameter to set logs table name in database backend.
+
+Add more tests for various database engines.
+
+=head1 ACKNOWLEDGEMENTS
+
+Thanks to David Precious for the L<Dancer::Plugin::Database> plugin.
+
+Thanks to my wife for support.
+
+=head1 AUTHOR
+
+Nikolay Aviltsev, C<< navi@cpan.org >>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2012 Nikolay Aviltsev.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See L<http://dev.perl.org/licenses/> for more information.
+
+=head1 SEE ALSO
+
+L<Dancer>
+
+L<Dancer::Plugin::Database>
+
