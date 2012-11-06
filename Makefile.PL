@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'Dancer::Plugin::Log::DB',
-    AUTHOR              => q{Nikolay Aviltsev <derkarl@gmail.com>},
+    AUTHOR              => q{Nikolay Aviltsev <navi@cpan.org>},
     VERSION_FROM        => 'lib/Dancer/Plugin/Log/DB.pm',
     ABSTRACT_FROM       => 'lib/Dancer/Plugin/Log/DB.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
