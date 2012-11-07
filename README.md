@@ -1,16 +1,3 @@
-  * NAME
-  * VERSION
-  * SYNOPSIS
-  * DESCRIPTION
-  * CONFIGURATION
-  * CAVEATS
-  * BUGS
-  * TODO
-  * ACKNOWLEDGEMENTS
-  * AUTHOR
-  * LICENSE AND COPYRIGHT
-  * SEE ALSO
-
 # NAME
 
 Dancer::Plugin::Log::DB - log arbitrary messages into a database from within
