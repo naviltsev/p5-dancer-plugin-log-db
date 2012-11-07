@@ -18,6 +18,11 @@ get '/01_prepare_env_a/*/*' => sub {
 	log_db_dbh->do("CREATE TABLE logs (_id INTEGER PRIMARY KEY AUTOINCREMENT, message TEXT, timestamp DATE, $field1_name TEXT, $field2_name TEXT)");
 };
 
+get '/01_prepare_env_b/*/*' => sub {
+	my ($message_field_name, $timestamp_field_name) = splat;
+	log_db_dbh->do("CREATE TABLE logs_table (_id INTEGER PRIMARY KEY AUTOINCREMENT, $message_field_name TEXT, $timestamp_field_name DATE)");
+};
+
 
 
 get '/02_add_common_log_entry/*/*' => sub {
@@ -168,6 +173,32 @@ get '/05_add_common_log_entry/*/*' => sub {
 	return 1;	
 };
 
+get '/06_check_common_log_entry/*/*' => sub {
+	my ($message, $timestamp) = splat;
+	undef($timestamp) 
+		if ($timestamp eq 'undef');
+	# $timestamp = time 
+	# 	unless $timestamp eq 'undef';
+	
+	my $where = 'message = ?';
+	if ($timestamp) {
+		$where .= ' AND timestamp = ?';
+	}
+
+	my @bind = ($message);
+	if ($timestamp) {
+		push @bind, sprintf("%s %s", localtime($timestamp)->ymd, localtime($timestamp)->hms);
+	}
+	
+	my $sth = log_db_dbh->prepare("SELECT * FROM logs_table WHERE $where");
+	$sth->execute(@bind);
+	
+	if ($sth->fetchrow_arrayref) {
+		return 1;
+	}
+	
+	return 0;
+};
 
 get '/99_remove_env' => sub {
 	unlink('dancer-plugin-log-db-test.sqlite');

@@ -1,3 +1,16 @@
+  * NAME
+  * VERSION
+  * SYNOPSIS
+  * DESCRIPTION
+  * CONFIGURATION
+  * CAVEATS
+  * BUGS
+  * TODO
+  * ACKNOWLEDGEMENTS
+  * AUTHOR
+  * LICENSE AND COPYRIGHT
+  * SEE ALSO
+
 # NAME
 
 Dancer::Plugin::Log::DB - log arbitrary messages into a database from within
@@ -5,7 +18,7 @@ your Dancer application.
 
 # VERSION
 
-Version 0.01
+Version 0.02
 
 # SYNOPSIS
 
@@ -24,8 +37,8 @@ Version 0.01
                     log_db { message => 'Another simple message', server_id => $my_server_id }; 
             }
 
-Database connection details and plugin settings are read from application
-config file - see below on more details.
+Database connection details and plugin settings for logger are read from
+application config file - see below for more details.
 
 # DESCRIPTION
 
@@ -60,8 +73,6 @@ can also add _server_id_ column to store server id which left the message.
 
 # CONFIGURATION
 
-**Table to keep logs should be called 'logs' in your database. This is not configurable in this version. I'm really sorry.**
-
 This plugin makes use of great _Dancer::Plugin::Database_ plugin, thus
 configuration is divided into 2 parts - database configuration and plugin
 configuration:
@@ -77,36 +88,32 @@ configuration:
                                     username: 'logs_username'
                                     password: 'logs_password'
                             log:
+                                    logs_table_name: 'messages'
                                     message_field_name: 'message'
                                     timestamp_field_name: 'timestamp'
                                     additional_fields:
                                             - 'server_id'
                                             - 'author_id'
 
-In the simplest case _log_ section can be empty. In this case message field
-name should be _message_, timestamp field name should be _timestamp_.
+In the simplest case _log_ section can be empty. In this case table name
+should be called _logs_, message field name should be _message_, timestamp
+field name should be _timestamp_.
 
 If you want to rename _message_ and _timestamp_ to something more clear in
 your database logs table, make sure you set corresponding names in
 _message_field_name_ and _timestamp_field_name_ under the _log_ section.
 
 If you try to leave a log message in a field which is not listed within
-_additional_fields_, you will get an exception.
+_additional_fields_, you will get an error.
 
 # CAVEATS
 
-Table name in your database backend should be called 'logs' and it's not
-configurable at the moment. I'm terribly sorry for this inconvenience and I
-promise I will fix this in the 0.02 version.
-
 # BUGS
 
-This is the 0.01 version and there are bugs. Your feedbacks are greatly
+This is the 0.02 version and there are bugs. Your feedbacks are greatly
 welcome.
 
 # TODO
-
-Add configuration parameter to set logs table name in database backend.
 
 Add more tests for various database engines.
 

@@ -11,7 +11,7 @@ use Dancer::Plugin;
 use Dancer::Config;
 use Dancer::Plugin::Database;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our $settings = undef;
 our $dbh;
@@ -51,6 +51,8 @@ register log_db => sub {
 	my $message_field_name = $settings->{log}->{message_field_name} || 'message';
 	my $timestamp_field_name = $settings->{log}->{timestamp_field_name} || 'timestamp';
 
+	my $logs_table_name = $settings->{log}->{logs_table_name} || 'logs';
+
 	my $additional_fields = $settings->{log}->{additional_fields};
 
 	my (@fields, @bind);
@@ -80,7 +82,7 @@ register log_db => sub {
 	}
 		
 	my $placeholders = join ",", map { "?" } @fields;
-	my $query = "INSERT INTO logs (" . join (",", @fields) . ") VALUES($placeholders)";
+	my $query = "INSERT INTO ${logs_table_name} (" . join (",", @fields) . ") VALUES($placeholders)";
 
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@bind);
@@ -98,7 +100,7 @@ Dancer::Plugin::Log::DB - log arbitrary messages into a database from within you
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -116,7 +118,7 @@ Version 0.01
 		log_db { message => 'Another simple message', server_id => $my_server_id }; 
 	}
 
-Database connection details and plugin settings are read from application config file - see below on more details.
+Database connection details and plugin settings for logger are read from application config file - see below for more details.
 
 =head1 DESCRIPTION
 
@@ -149,8 +151,6 @@ For example, in complement to existing I<timestamp> and I<message> fields you ca
 
 =head1 CONFIGURATION
 
-B<Table to keep logs should be called 'logs' in your database. This is not configurable in this version. I'm really sorry.>
-
 This plugin makes use of great I<Dancer::Plugin::Database> plugin, thus configuration is divided into 2 parts - database configuration and plugin configuration: 
 
 	plugins:
@@ -163,31 +163,27 @@ This plugin makes use of great I<Dancer::Plugin::Database> plugin, thus configur
 				username: 'logs_username'
 				password: 'logs_password'
 			log:
+				logs_table_name: 'messages'
 				message_field_name: 'message'
 				timestamp_field_name: 'timestamp'
 				additional_fields:
 					- 'server_id'
 					- 'author_id'
 
-In the simplest case I<log> section can be empty.
-In this case message field name should be I<message>, timestamp field name should be I<timestamp>.
+In the simplest case I<log> section can be empty. In this case table name should be called I<logs>, message field name should be I<message>, 
+timestamp field name should be I<timestamp>. 
 
 If you want to rename I<message> and I<timestamp> to something more clear in your database logs table, make sure you set corresponding names in I<message_field_name> and I<timestamp_field_name> under the I<log> section.
 
-If you try to leave a log message in a field which is not listed within I<additional_fields>, you will get an exception.
+If you try to leave a log message in a field which is not listed within I<additional_fields>, you will get an error.
 
 =head1 CAVEATS
 
-Table name in your database backend should be called 'logs' and it's not configurable at the moment.
-I'm terribly sorry for this inconvenience and I promise I will fix this in the 0.02 version.
-
 =head1 BUGS
 
-This is the 0.01 version and there are bugs. Your feedbacks are greatly welcome.
+This is the 0.02 version and there are bugs. Your feedbacks are greatly welcome.
 
 =head1 TODO
-
-Add configuration parameter to set logs table name in database backend.
 
 Add more tests for various database engines.
 
