@@ -11,7 +11,7 @@ use Dancer::Plugin;
 use Dancer::Config;
 use Dancer::Plugin::Database;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our $settings = undef;
 our $dbh;
@@ -100,7 +100,7 @@ Dancer::Plugin::Log::DB - log arbitrary messages into a database from within you
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =head1 SYNOPSIS
 
@@ -181,7 +181,7 @@ If you try to leave a log message in a field which is not listed within I<additi
 
 =head1 BUGS
 
-This is the 0.02 version and there are bugs. Your feedbacks are greatly welcome.
+This is the 0.03 version and there are bugs. Your feedbacks are greatly welcome.
 
 =head1 TODO
 
