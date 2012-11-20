@@ -201,6 +201,7 @@ get '/06_check_common_log_entry/*/*' => sub {
 };
 
 get '/99_remove_env' => sub {
-	unlink('dancer-plugin-log-db-test.sqlite');
-	# delete database file
+	# Clean up testing database
+	log_db_dbh->do("DROP TABLE IF EXISTS logs");
+	log_db_dbh->do("DROP TABLE IF EXISTS logs_table");
 };
