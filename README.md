@@ -5,7 +5,7 @@ your Dancer application.
 
 # VERSION
 
-Version 0.03
+Version 0.04
 
 # SYNOPSIS
 
@@ -97,7 +97,7 @@ _additional_fields_, you will get an error.
 
 # BUGS
 
-This is the 0.03 version and there are bugs. Your feedbacks are greatly
+This is the 0.04 version and there are bugs. Your feedbacks are greatly
 welcome.
 
 # TODO
